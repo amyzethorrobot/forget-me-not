@@ -117,12 +117,25 @@ def system_cross_train(network : nn.Module,
     return losses, all_losses, grads, dirs
 
 
-def system_test(network, x, target_function):
+def system_test(network, 
+                x: np.ndarray, 
+                target_function: callable):
+
+    '''
+    Function for evaluation with results of trained network
+
+    args: 
+    network - trained network
+    x: np.ndarray - array of input values
+    target_function: callable - target function for output
+    '''
     
     network.eval()
     
     out = network.forward(torch.tensor(x.reshape(len(x), 1)))
-    res = out.detach().numpy()
-    true = target_function(x)
-    
-    return res, true
+    result = out.detach().numpy()
+    true_val = target_function(x)
+
+    result = np.transpose(result)
+
+    return result, true_val
